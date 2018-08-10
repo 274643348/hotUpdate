@@ -180,7 +180,6 @@ cc.Class({
 
     onReset: function () {
         this.cardInfo.active = false;
-
         this.anchorCards.removeAllChildren();
 
         this._resetChips();
