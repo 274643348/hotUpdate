@@ -4,32 +4,32 @@ cc.Class({
     properties: {
         winAudio: {
             default: null,
-            type: cc.AudioClip
+            url: cc.AudioClip
         },
 
         loseAudio: {
             default: null,
-            type: cc.AudioClip
+            url: cc.AudioClip
         },
 
         cardAudio: {
             default: null,
-            type: cc.AudioClip
+            url: cc.AudioClip
         },
 
         buttonAudio: {
             default: null,
-            type: cc.AudioClip
+            url: cc.AudioClip
         },
 
         chipsAudio: {
             default: null,
-            type: cc.AudioClip
+            url: cc.AudioClip
         },
 
         bgm: {
             default: null,
-            type: cc.AudioClip
+            url: cc.AudioClip
         }
     },
 

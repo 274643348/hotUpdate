@@ -14,7 +14,7 @@ var manifest = {
 var dest = './remote-assets/';
 var src = './jsb/';
 
-// Parse arguments
+// Parse arguments 
 var i = 2;
 while ( i < process.argv.length) {
     var arg = process.argv[i];

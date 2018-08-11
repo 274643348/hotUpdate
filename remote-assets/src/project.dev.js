@@ -1,23 +1,24 @@
-__require = function e(t, n, r) {
+require = function e(t, n, r) {
   function s(o, u) {
     if (!n[o]) {
       if (!t[o]) {
-        var a = "function" == typeof __require && __require;
+        var a = "function" == typeof require && require;
         if (!u && a) return a(o, !0);
         if (i) return i(o, !0);
-        throw new Error("Cannot find module '" + o + "'");
+        var f = new Error("Cannot find module '" + o + "'");
+        throw f.code = "MODULE_NOT_FOUND", f;
       }
-      var f = n[o] = {
+      var l = n[o] = {
         exports: {}
       };
-      t[o][0].call(f.exports, function(e) {
+      t[o][0].call(l.exports, function(e) {
         var n = t[o][1][e];
         return s(n || e);
-      }, f, f.exports, e, t, n, r);
+      }, l, l.exports, e, t, n, r);
     }
     return n[o].exports;
   }
-  var i = "function" == typeof __require && __require;
+  var i = "function" == typeof require && require;
   for (var o = 0; o < r.length; o++) s(r[o]);
   return s;
 }({
@@ -148,9 +149,9 @@ __require = function e(t, n, r) {
         this.anchorCards.addChild(newCard.node);
         newCard.init(card);
         newCard.reveal(show);
-        var startPos = cc.v2(0, 0);
+        var startPos = cc.p(0, 0);
         var index = this.actor.cards.length - 1;
-        var endPos = cc.v2(this.cardSpace * index, 0);
+        var endPos = cc.p(this.cardSpace * index, 0);
         newCard.node.setPosition(startPos);
         var moveAction = cc.moveTo(.5, endPos);
         var callback = cc.callFunc(this._onDealEnd, this, this.cardSpace * index);
@@ -185,7 +186,7 @@ __require = function e(t, n, r) {
         }
       },
       _updatePointPos: function _updatePointPos(xPos) {
-        this.cardInfo.x = xPos + 50;
+        this.cardInfo.setPositionX(xPos + 50);
       },
       showStakeChips: function showStakeChips(stake) {
         var chips = this.spChips;
@@ -206,7 +207,7 @@ __require = function e(t, n, r) {
 
          case ActorPlayingState.Bust:
           var min = Utils.getMinMaxPoint(this.actor.cards).min;
-          this.labelCardInfo.string = "\u7206\u724c(" + min + ")";
+          this.labelCardInfo.string = "爆牌(" + min + ")";
           this.spCardInfo.spriteFrame = Game.instance.assetMng.texBust;
           this.cardInfo.active = true;
           this.animFX.show(true);
@@ -216,7 +217,7 @@ __require = function e(t, n, r) {
 
          case ActorPlayingState.Stand:
           var max = Utils.getMinMaxPoint(this.actor.cards).max;
-          this.labelCardInfo.string = "\u505c\u724c(" + max + ")";
+          this.labelCardInfo.string = "停牌(" + max + ")";
           this.spCardInfo.spriteFrame = Game.instance.assetMng.texCardInfo;
           this.resetCountdown();
         }
@@ -362,27 +363,27 @@ __require = function e(t, n, r) {
       properties: {
         winAudio: {
           default: null,
-          type: cc.AudioClip
+          url: cc.AudioClip
         },
         loseAudio: {
           default: null,
-          type: cc.AudioClip
+          url: cc.AudioClip
         },
         cardAudio: {
           default: null,
-          type: cc.AudioClip
+          url: cc.AudioClip
         },
         buttonAudio: {
           default: null,
-          type: cc.AudioClip
+          url: cc.AudioClip
         },
         chipsAudio: {
           default: null,
-          type: cc.AudioClip
+          url: cc.AudioClip
         },
         bgm: {
           default: null,
-          type: cc.AudioClip
+          url: cc.AudioClip
         }
       },
       playMusic: function playMusic() {
@@ -453,7 +454,7 @@ __require = function e(t, n, r) {
         for (var i = 0; i < self.btnChips.length; ++i) registerBtn(i);
       },
       playAddChip: function playAddChip() {
-        var startPos = cc.v2(2 * (Math.random() - .5) * 50, 2 * (Math.random() - .5) * 50);
+        var startPos = cc.p(50 * cc.randomMinus1To1(), 50 * cc.randomMinus1To1());
         var chip = cc.instantiate(this.chipPrefab);
         this.anchorChipToss.addChild(chip);
         chip.setPosition(startPos);
@@ -768,7 +769,7 @@ __require = function e(t, n, r) {
         if (this.totalChipsNum < delta) {
           console.log("not enough chips!");
           this.info.enabled = true;
-          this.info.string = "\u91d1\u5e01\u4e0d\u8db3!";
+          this.info.string = "金币不足!";
           return false;
         }
         this.totalChipsNum -= delta;
@@ -776,7 +777,7 @@ __require = function e(t, n, r) {
         this.player.addStake(delta);
         this.audioMng.playChips();
         this.info.enabled = false;
-        this.info.string = "\u8bf7\u4e0b\u6ce8";
+        this.info.string = "请下注";
         return true;
       },
       resetStake: function resetStake() {
@@ -794,7 +795,7 @@ __require = function e(t, n, r) {
           var anchor = this.playerAnchors[i];
           var switchSide = i > 2;
           anchor.addChild(playerNode);
-          playerNode.position = cc.v2(0, 0);
+          playerNode.position = cc.p(0, 0);
           var playerInfoPos = cc.find("anchorPlayerInfo", anchor).getPosition();
           var stakePos = cc.find("anchorStake", anchor).getPosition();
           var actorRenderer = playerNode.getComponent("ActorRenderer");
@@ -886,7 +887,7 @@ __require = function e(t, n, r) {
           this.decks.reset();
           this.player.reset();
           this.dealer.reset();
-          this.info.string = "\u8bf7\u4e0b\u6ce8";
+          this.info.string = "请下注";
           this.inGameUI.showBetState();
           this.inGameUI.startCountdown();
           this.audioMng.resumeMusic();
@@ -918,7 +919,7 @@ __require = function e(t, n, r) {
         },
         manifestUrl: {
           default: null,
-          type: cc.Asset
+          url: cc.RawAsset
         },
         percent: {
           default: null,
@@ -930,24 +931,24 @@ __require = function e(t, n, r) {
         switch (event.getEventCode()) {
          case jsb.EventAssetsManager.ERROR_NO_LOCAL_MANIFEST:
           cc.log("No local manifest file found, hot update skipped.");
-          this._am.setEventCallback(null);
+          cc.eventManager.removeListener(this._checkListener);
           break;
 
          case jsb.EventAssetsManager.ERROR_DOWNLOAD_MANIFEST:
          case jsb.EventAssetsManager.ERROR_PARSE_MANIFEST:
           cc.log("Fail to download manifest file, hot update skipped.");
-          this._am.setEventCallback(null);
+          cc.eventManager.removeListener(this._checkListener);
           break;
 
          case jsb.EventAssetsManager.ALREADY_UP_TO_DATE:
           cc.log("Already up to date with the latest remote version.");
-          this._am.setEventCallback(null);
+          cc.eventManager.removeListener(this._checkListener);
           break;
 
          case jsb.EventAssetsManager.NEW_VERSION_FOUND:
           this._needUpdate = true;
           this.updatePanel.active = true;
-          this._am.setEventCallback(null);
+          cc.eventManager.removeListener(this._checkListener);
         }
       },
       updateCb: function updateCb(event) {
@@ -1002,14 +1003,14 @@ __require = function e(t, n, r) {
           cc.log(event.getMessage());
         }
         if (failed) {
-          this._am.setEventCallback(null);
+          cc.eventManager.removeListener(this._updateListener);
           this.updatePanel.active = false;
         }
         if (needRestart) {
-          this._am.setEventCallback(null);
+          cc.eventManager.removeListener(this._updateListener);
           var searchPaths = jsb.fileUtils.getSearchPaths();
           var newPaths = this._am.getLocalManifest().getSearchPaths();
-          Array.prototype.unshift.apply(searchPaths, newPaths);
+          Array.prototype.unshift(searchPaths, newPaths);
           cc.sys.localStorage.setItem("HotUpdateSearchPaths", JSON.stringify(searchPaths));
           jsb.fileUtils.setSearchPaths(searchPaths);
           cc.game.restart();
@@ -1017,7 +1018,8 @@ __require = function e(t, n, r) {
       },
       hotUpdate: function hotUpdate() {
         if (this._am && this._needUpdate) {
-          this._am.setEventCallback(this.updateCb.bind(this));
+          this._updateListener = new jsb.EventListenerAssetsManager(this._am, this.updateCb.bind(this));
+          cc.eventManager.addListener(this._updateListener, 1);
           this._failCount = 0;
           this._am.update();
         }
@@ -1026,12 +1028,17 @@ __require = function e(t, n, r) {
         if (!cc.sys.isNative) return;
         var storagePath = (jsb.fileUtils ? jsb.fileUtils.getWritablePath() : "/") + "blackjack-remote-asset";
         cc.log("Storage path for remote asset : " + storagePath);
-        this._am = new jsb.AssetsManager(this.manifestUrl.nativeUrl, storagePath);
+        this._am = new jsb.AssetsManager(this.manifestUrl, storagePath);
+        this._am.retain();
         this._needUpdate = false;
         if (this._am.getLocalManifest().isLoaded()) {
-          this._am.setEventCallback(this.checkCb.bind(this));
+          this._checkListener = new jsb.EventListenerAssetsManager(this._am, this.checkCb.bind(this));
+          cc.eventManager.addListener(this._checkListener, 1);
           this._am.checkUpdate();
         }
+      },
+      onDestroy: function onDestroy() {
+        this._am && this._am.release();
       }
     });
     cc._RF.pop();
@@ -1179,31 +1186,31 @@ __require = function e(t, n, r) {
     cc._RF.push(module, "4f9c5eXxqhHAKLxZeRmgHDB", "PlayerData");
     "use strict";
     var players = [ {
-      name: "\u71c3\u70e7\u5427\uff0c\u86cb\u86cb\u513f\u519b",
+      name: "燃烧吧，蛋蛋儿军",
       gold: 3e3,
       photoIdx: 0
     }, {
-      name: "\u5730\u65b9\u653f\u5e9c",
+      name: "地方政府",
       gold: 2e3,
       photoIdx: 1
     }, {
-      name: "\u624b\u673a\u8d85\u4eba",
+      name: "手机超人",
       gold: 1500,
       photoIdx: 2
     }, {
-      name: "\u5929\u7075\u7075\uff0c\u5730\u7075\u7075",
+      name: "天灵灵，地灵灵",
       gold: 500,
       photoIdx: 3
     }, {
-      name: "\u54df\u54df\uff0c\u5207\u514b\u95f9",
+      name: "哟哟，切克闹",
       gold: 9e3,
       photoIdx: 4
     }, {
-      name: "\u5b66\u59d0\u4e0d\u8981\u6b7b",
+      name: "学姐不要死",
       gold: 5e3,
       photoIdx: 5
     }, {
-      name: "\u63d0\u767e\u4e07",
+      name: "提百万",
       gold: 1e4,
       photoIdx: 6
     } ];
@@ -1516,9 +1523,9 @@ __require = function e(t, n, r) {
         State.console = console;
         model = new State.StateMachine("root");
         var initial = new State.PseudoState("init-root", model, State.PseudoStateKind.Initial);
-        var bet = new State.State("\u4e0b\u6ce8", model);
-        playing = new State.State("\u5df2\u5f00\u5c40", model);
-        var settled = new State.State("\u7ed3\u7b97", model);
+        var bet = new State.State("下注", model);
+        playing = new State.State("已开局", model);
+        var settled = new State.State("结算", model);
         initial.to(bet);
         bet.to(playing).when(on("deal"));
         playing.to(settled).when(on("end"));
@@ -1535,10 +1542,10 @@ __require = function e(t, n, r) {
         settled.exit(function() {
           target.onEndState(false);
         });
-        var initialP = new State.PseudoState("init \u5df2\u5f00\u5c40", playing, State.PseudoStateKind.Initial);
-        var deal = new State.State("\u53d1\u724c", playing);
-        var playersTurn = new State.State("\u73a9\u5bb6\u51b3\u7b56", playing);
-        var dealersTurn = new State.State("\u5e84\u5bb6\u51b3\u7b56", playing);
+        var initialP = new State.PseudoState("init 已开局", playing, State.PseudoStateKind.Initial);
+        var deal = new State.State("发牌", playing);
+        var playersTurn = new State.State("玩家决策", playing);
+        var dealersTurn = new State.State("庄家决策", playing);
         initialP.to(deal);
         deal.to(playersTurn).when(on("dealed"));
         playersTurn.to(dealersTurn).when(on("player acted"));
@@ -1659,14 +1666,14 @@ __require = function e(t, n, r) {
       }();
       StateJS.Element = Element;
     })(StateJS || (StateJS = {}));
-    var __extends = (void 0, function(d, b) {
+    var __extends = function(d, b) {
       for (var p in b) b.hasOwnProperty(p) && (d[p] = b[p]);
       function __() {
         this.constructor = d;
       }
       __.prototype = b.prototype;
       d.prototype = new __();
-    });
+    };
     var StateJS;
     (function(StateJS) {
       var Region = function(_super) {
